@@ -1,0 +1,7 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/Labs.dir/task1.cpp.obj: dyndep
+
+build CMakeFiles/Labs.dir/Task2.cpp.obj: dyndep
+
+build CMakeFiles/Labs.dir/task3.cpp.obj: dyndep
+
