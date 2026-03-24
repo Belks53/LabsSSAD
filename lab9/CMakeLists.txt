@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(lab9 main.cpp
         task2.cpp
-        task2.h)
+        task2.h
+        task3.cpp
+        task3.h)
