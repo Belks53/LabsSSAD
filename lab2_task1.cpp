@@ -1,7 +1,3 @@
-//
-// Created by Belka1 on 27.01.2026.
-//
-
 #include <iosfwd>
 class Box
 {
