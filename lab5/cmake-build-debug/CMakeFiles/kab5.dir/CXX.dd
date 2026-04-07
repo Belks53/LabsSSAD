@@ -1,5 +1,0 @@
-ninja_dyndep_version = 1.0
-build CMakeFiles/kab5.dir/main.cpp.obj: dyndep
-
-build CMakeFiles/kab5.dir/task2.cpp.obj: dyndep
-

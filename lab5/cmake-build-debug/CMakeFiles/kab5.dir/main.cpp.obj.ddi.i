@@ -1,5 +1,0 @@
-# 0 "C:/Users/Belka1/CLionProjects/LabsSSAD/lab5/main.cpp"
-# 1 "C:\\Users\\Belka1\\CLionProjects\\LabsSSAD\\lab5\\cmake-build-debug//"
-# 0 "<built-in>"
-# 0 "<command-line>"
-# 1 "C:/Users/Belka1/CLionProjects/LabsSSAD/lab5/main.cpp"

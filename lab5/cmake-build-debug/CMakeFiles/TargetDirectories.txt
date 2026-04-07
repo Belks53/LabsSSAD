@@ -1,3 +1,0 @@
-C:/Users/Belka1/CLionProjects/LabsSSAD/lab5/cmake-build-debug/CMakeFiles/kab5.dir
-C:/Users/Belka1/CLionProjects/LabsSSAD/lab5/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Belka1/CLionProjects/LabsSSAD/lab5/cmake-build-debug/CMakeFiles/rebuild_cache.dir
