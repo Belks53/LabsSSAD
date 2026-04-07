@@ -102,10 +102,10 @@ int main() {
     return 0;
 }
 
-// EXAMPLE OUTPUT:
-// Warrior attack!
-// Skull Crusher STRENGTH LEVEL IS: 75
-// Mage attack!
-// Bone Breaker STRENGTH LEVEL IS: 15
-// Rogue attack!
-// Skull Crusher STRENGTH LEVEL IS: 60
+EXAMPLE OUTPUT:
+Warrior attack!
+Skull Crusher STRENGTH LEVEL IS: 75
+Mage attack!
+Bone Breaker STRENGTH LEVEL IS: 15
+Rogue attack!
+Skull Crusher STRENGTH LEVEL IS: 60
