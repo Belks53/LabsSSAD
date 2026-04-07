@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 class Logger {
 private:
     static Logger* instance;
