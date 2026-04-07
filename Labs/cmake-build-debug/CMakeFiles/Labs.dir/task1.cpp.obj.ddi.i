@@ -1,5 +1,0 @@
-# 0 "C:/Users/Belka1/CLionProjects/Labs/task1.cpp"
-# 1 "C:\\Users\\Belka1\\CLionProjects\\Labs\\cmake-build-debug//"
-# 0 "<built-in>"
-# 0 "<command-line>"
-# 1 "C:/Users/Belka1/CLionProjects/Labs/task1.cpp"

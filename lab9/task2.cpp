@@ -1,149 +1,94 @@
-#include "task2.h"
-#include <unordered_map>
-#include <string>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
-class PayPal {
-public:
-    void makePayment(string item) {
-        cout << "Making PayPal payment for item: " << item << endl;
-    }
-
-    bool verifyPayment(string transactionId) {
-        cout << "Verifying PayPal payment with transaction ID: " << transactionId << endl;
-        return true;
-    }
-
-    void refundPayment(string item) {
-        cout << "Refunding PayPal payment for item: " << item << endl;
-    }
-};
-
-class Stripe {
-public:
-    void chargePayment(string item) {
-        cout << "Charging Stripe payment for item: " << item << endl;
-    }
-
-    bool verifyCharge(string transactionId) {
-        cout << "Verifying Stripe payment with transaction ID: " << transactionId << endl;
-        return true;
-    }
-
-    void issueRefund(string item) {
-        cout << "Issuing Refund for Stripe payment for item: " << item << endl;
-    }
-};
-
-class PaymentProvider {
-public:
-    virtual ~PaymentProvider() = default;
-    virtual void processPayment(const string& item) = 0;
-    virtual bool verifyPayment(const string& transactionId) = 0;
-    virtual void refundPayment(const string& item) = 0;
-};
-
-class PayPalAdapter : public PaymentProvider {
+class Document {
 private:
-    PayPal* payPal;
+    string header;
+    string body;
+    string footer;
 
 public:
-    PayPalAdapter(PayPal* pp) : payPal(pp) {}
-
-    void processPayment(const string& item) override {
-        payPal->makePayment(item);
+    void setHeader(const string& h) {
+        header = h;
     }
 
-    bool verifyPayment(const string& transactionId) override {
-        return payPal->verifyPayment(transactionId);
+    void setBody(const string& b) {
+        body = b;
     }
 
-    void refundPayment(const string& item) override {
-        payPal->refundPayment(item);
+    void setFooter(const string& f) {
+        footer = f;
+    }
+
+    void print() const {
+        cout << "\n--- Document ---" << endl;
+        cout << "Header: " << header << endl;
+        cout << "Body: " << body << endl;
+        cout << "Footer: " << footer << endl;
+        cout << "----------------" << endl;
     }
 };
 
-class StripeAdapter : public PaymentProvider {
+class DocumentBuilder {
+public:
+    virtual void buildHeader() = 0;
+    virtual void buildBody() = 0;
+    virtual void buildFooter() = 0;
+    virtual Document* getDocument() = 0;
+    virtual ~DocumentBuilder() {}
+};
+
+
+class ReportBuilder : public DocumentBuilder {
 private:
-    Stripe* stripe;
+    Document* doc;
 
 public:
-    StripeAdapter(Stripe* s) : stripe(s) {}
-
-    void processPayment(const string& item) override {
-        stripe->chargePayment(item);
+    ReportBuilder() {
+        doc = new Document();
     }
 
-    bool verifyPayment(const string& transactionId) override {
-        return stripe->verifyCharge(transactionId);
+    void buildHeader() override {
+        doc->setHeader("=== Report Header ===");
     }
 
-    void refundPayment(const string& item) override {
-        stripe->issueRefund(item);
-    }
-};
-
-class PaymentGateWay {
-private:
-    unordered_map<string, PaymentProvider *> paymentProviders;
-
-public:
-    PaymentGateWay() {
-        paymentProviders = unordered_map<string, PaymentProvider *>();
-    }
-    void addPaymentProvider(const string& providerName, PaymentProvider* paymentProvider) {
-        paymentProviders[providerName] = paymentProvider;
-    }
-    void processPayment(const string& providerName, const string& paymentInfo) {
-        auto it = paymentProviders.find(providerName);
-        if (it != paymentProviders.end()) {
-            it->second->processPayment(paymentInfo);
-        } else {
-            cout << "Error: Payment provider '" << providerName << "' not found!" << endl;
-        }
+    void buildBody() override {
+        doc->setBody("This is the main body of the report.");
     }
 
-    void refundPayment(const string& providerName, const string& refundInfo) {
-        auto it = paymentProviders.find(providerName);
-        if (it != paymentProviders.end()) {
-            it->second->refundPayment(refundInfo);
-        } else {
-            cout << "Error: Payment provider '" << providerName << "' not found!" << endl;
-        }
+    void buildFooter() override {
+        doc->setFooter("=== Report Footer ===");
     }
-    void verifyPayment(const string& providerName, const string& paymentInfo) {
-        auto it = paymentProviders.find(providerName);
-        if (it != paymentProviders.end()) {
-            it->second->verifyPayment(paymentInfo);
-        } else {
-            cout << "Error: Payment provider '" << providerName << "' not found!" << endl;
-        }
+
+    Document* getDocument() override {
+        return doc;
     }
 };
 
 
-
+class Director {
+public:
+    void make(DocumentBuilder& builder)
+    {
+        builder.buildHeader();
+        builder.buildBody();
+        builder.buildFooter();
+    }
+};
 
 
 int main() {
-    PayPalAdapter* paypalAdapter = new PayPalAdapter(new PayPal());
-    StripeAdapter* stripeAdapter = new StripeAdapter(new Stripe());
+    Director director;
+    ReportBuilder builder;
 
-    PaymentGateWay paymentGateWay;
-    paymentGateWay.addPaymentProvider("STRIPE", stripeAdapter);
-    paymentGateWay.processPayment("STRIPE", "SHEIN-SHOES");
-    paymentGateWay.verifyPayment("STRIPE", "transactionId:001001");
-    paymentGateWay.refundPayment("STRIPE", "Refund SHEIN-SHOES");
-    cout << endl;
-    paymentGateWay.addPaymentProvider("PAYPAL", paypalAdapter);
-    paymentGateWay.processPayment("PAYPAL", "KAZAN-EXPRESS-HATS");
-    paymentGateWay.verifyPayment("PAYPAL", "transactionId:061041");
-    paymentGateWay.refundPayment("PAYPAL", "Refund KAZAN-EXPRESS-HATS");
+    director.make(builder);
 
-    delete paypalAdapter;
-    delete stripeAdapter;
+    Document* report = builder.getDocument();
+    report->print();
+
+    delete report;
 
     return 0;
 }
