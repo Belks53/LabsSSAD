@@ -46,7 +46,7 @@ public:
     }
 };
 
-int main() {
+int task2() {
     Node* n1 = new Node(1);
     Node* n2 = new Node(2);
     Node* n3 = new Node(3);
