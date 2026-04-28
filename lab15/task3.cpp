@@ -7,8 +7,11 @@ using namespace std;
 // Memento: holds editor state
 class Memento {
 public:
-    Memento(const string& state);
-    string getState() const;
+    Memento(const string& state) : state(state) {}
+
+    string getState() const {
+        return state;
+    }
 
 private:
     string state;
@@ -17,12 +20,23 @@ private:
 // Originator: the text editor
 class TextEditor {
 public:
-    TextEditor();
-    void appendText(const string& newText);
-    string getText() const;
+    TextEditor() : text("") {}
 
-    Memento save() const;
-    void restore(const Memento& memento);
+    void appendText(const string& newText) {
+        text += newText;
+    }
+
+    string getText() const {
+        return text;
+    }
+
+    Memento save() const {
+        return Memento(text);
+    }
+
+    void restore(const Memento& memento) {
+        text = memento.getState();
+    }
 
 private:
     string text;
@@ -31,83 +45,46 @@ private:
 // Caretaker: manages undo/redo stacks
 class UndoRedoManager {
 public:
-    UndoRedoManager();
+    UndoRedoManager() {}
 
-    void saveState(TextEditor& editor);
-    void undo(TextEditor& editor);
-    void redo(TextEditor& editor);
+    void saveState(TextEditor& editor) {
+        undoStack.push(editor.save());
+
+        while (!redoStack.empty()) {
+            redoStack.pop();
+        }
+    }
+
+    void undo(TextEditor& editor) {
+        if (undoStack.size() <= 1) {
+            return;
+        }
+
+        Memento currentState = undoStack.top();
+        undoStack.pop();
+
+        redoStack.push(currentState);
+
+        Memento previousState = undoStack.top();
+        editor.restore(previousState);
+    }
+
+    void redo(TextEditor& editor) {
+        if (redoStack.empty()) {
+            return;
+        }
+
+        Memento nextState = redoStack.top();
+        redoStack.pop();
+
+        undoStack.push(nextState);
+        editor.restore(nextState);
+    }
 
 private:
     stack<Memento> undoStack;
     stack<Memento> redoStack;
 };
-
-// Memento methods
-Memento::Memento(const string& state) {
-    this->state = state;
-}
-
-string Memento::getState() const {
-    return state;
-}
-
-// TextEditor methods
-TextEditor::TextEditor() {
-    text = "";
-}
-
-void TextEditor::appendText(const string& newText) {
-    text += newText;
-}
-
-string TextEditor::getText() const {
-    return text;
-}
-
-Memento TextEditor::save() const {
-    return Memento(text);
-}
-
-void TextEditor::restore(const Memento& memento) {
-    text = memento.getState();
-}
-
-// UndoRedoManager methods
-UndoRedoManager::UndoRedoManager() {}
-
-void UndoRedoManager::saveState(TextEditor& editor) {
-    undoStack.push(editor.save());
-
-    while (!redoStack.empty()) {
-        redoStack.pop();
-    }
-}
-
-void UndoRedoManager::undo(TextEditor& editor) {
-    if (undoStack.size() <= 1) {
-        return;
-    }
-
-    Memento currentState = undoStack.top();
-    undoStack.pop();
-
-    redoStack.push(currentState);
-
-    Memento previousState = undoStack.top();
-    editor.restore(previousState);
-}
-
-void UndoRedoManager::redo(TextEditor& editor) {
-    if (redoStack.empty()) {
-        return;
-    }
-
-    Memento nextState = redoStack.top();
-    redoStack.pop();
-
-    undoStack.push(nextState);
-    editor.restore(nextState);
-}
 
 int main() {
     TextEditor editor;
